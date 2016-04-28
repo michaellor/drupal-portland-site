@@ -23,6 +23,8 @@ function pingpong_form() {
         '#title' => 'Count Goal',
         '#type' => 'textfield',
         '#description' => t('Please enter a number to count up to.'),
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_range', 'element_validate_odd'),
+        '#required' => TRUE,
     );
 
     $form['submit'] = array(
@@ -31,6 +33,18 @@ function pingpong_form() {
     );
 
     return $form;
+}
+
+function element_validate_odd($element) {
+  if ($element['#value'] % 2 == 0) {
+      form_error($element, t('Number needs to be odd.'));
+  }
+}
+
+function element_validate_range($element) {
+    if ($element['#value'] > 50 || $element['#value'] < 10) {
+        form_error($element, t('Number needs to be less than 50 or greater than 10.'));
+    }
 }
 
 function pingpong_form_submit($form, &$form_state) {
